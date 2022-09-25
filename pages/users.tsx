@@ -26,6 +26,7 @@ const UserList = ({
 
 export default UserList;
 
+// https://nextjs.org/docs/basic-features/data-fetching/get-static-props
 export const getStaticProps: GetStaticProps = async (context) => {
   const response = await fetch("https://jsonplaceholder.typicode.com/users");
   const data: User[] = await response.json();
