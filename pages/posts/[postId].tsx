@@ -1,7 +1,14 @@
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
+import { useRouter } from "next/router";
 import { PostModel } from ".";
 
 const Post = ({ post }: InferGetStaticPropsType<typeof getStaticProps>) => {
+  const router = useRouter();
+
+  if (router.isFallback) {
+    return <h1>Loading...</h1>;
+  }
+
   return (
     <>
       <h2>
@@ -31,7 +38,10 @@ export const getStaticPaths: GetStaticPaths = async () => {
   //   };
   // });
 
-  return { paths, fallback: false };
+  return { paths, fallback: "blocking" };
+  //fallback false: returns 404 page
+  //fallback true: generate the fallback page
+  //fallback blocking: will render the page on the server
 };
 
 export const getStaticProps: GetStaticProps = async (context) => {
@@ -41,6 +51,12 @@ export const getStaticProps: GetStaticProps = async (context) => {
   );
 
   const data = await response.json();
+
+  if (!data.id) {
+    return {
+      notFound: true,
+    };
+  }
 
   return {
     props: {
