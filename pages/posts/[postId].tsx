@@ -1,4 +1,5 @@
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
+import { PostModel } from ".";
 
 const Post = ({ post }: InferGetStaticPropsType<typeof getStaticProps>) => {
   return (
@@ -14,12 +15,21 @@ const Post = ({ post }: InferGetStaticPropsType<typeof getStaticProps>) => {
 export default Post;
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const arr: string[] = ["1", "2", "3"];
-  const paths = arr.map((postId) => {
+  const response = await fetch("https://jsonplaceholder.typicode.com/posts");
+  const data = await response.json();
+
+  const paths = data.map((post: PostModel) => {
     return {
-      params: { postId },
+      params: { postId: `${post.id}` },
     };
   });
+
+  // const arr: string[] = ["1", "2", "3"];
+  // const paths = arr.map((postId) => {
+  //   return {
+  //     params: { postId },
+  //   };
+  // });
 
   return { paths, fallback: false };
 };
