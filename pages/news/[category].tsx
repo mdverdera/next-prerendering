@@ -34,7 +34,10 @@ const ArticleListByCategory = ({
 export default ArticleListByCategory;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { params } = context;
+  const { params, req, res, query } = context;
+  console.log(query); //?subcategory=football
+  console.log(req.headers.cookie);
+  res.setHeader("Set-Cookie", ["name=Marvin"]);
   const response = await fetch(
     `http://localhost:4000/news?category=${params?.category}`
   );
